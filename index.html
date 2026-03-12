@@ -104,6 +104,31 @@
     let currentSkills = [];
     let field = "";
 
+    // Learning resources for each skill
+    const learningResources = {
+        "Python": {
+            description: "Learn Python basics, syntax, and projects.",
+            link: "https://www.w3schools.com/python/"
+        },
+        "SQL": {
+            description: "Understand databases and queries.",
+            link: "https://www.khanacademy.org/computing/computer-programming/sql"
+        },
+        "Machine Learning": {
+            description: "Intro to ML algorithms and models.",
+            link: "https://www.coursera.org/learn/machine-learning"
+        },
+        "SEO": {
+            description: "Learn search engine optimization strategies.",
+            link: "https://learndigital.withgoogle.com/digitalgarage/course/seo"
+        },
+        "Networking": {
+            description: "Basics of computer networks.",
+            link: "https://www.cisco.com/c/en/us/training-events/training-certifications.html"
+        }
+    };
+
+
     // AI knowledge base: required skills for each field
     const requiredSkills = {
         "Data Science": ["Python", "Machine Learning", "Statistics", "SQL", "Data Visualization"],
