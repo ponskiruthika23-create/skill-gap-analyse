@@ -154,43 +154,84 @@
         document.getElementById("page1").style.display = "none";
         document.getElementById("page2").style.display = "block";
     }
-
     function goToPage3() {
-        currentSkills = document.getElementById("currentSkills").value.split(",").map(s => s.trim());
-        field = document.getElementById("field").value;
+    currentSkills = document.getElementById("currentSkills").value
+        .split(",")
+        .map(s => s.trim().toLowerCase()); // convert to lowercase for matching
+    field = document.getElementById("field").value;
 
-        let neededSkills = requiredSkills[field];
-        let missingSkills = neededSkills.filter(skill => !currentSkills.includes(skill));
+    let neededSkills = requiredSkills[field];
+    let missingSkills = neededSkills.filter(skill => !currentSkills.includes(skill.toLowerCase()));
 
-        // AI-style priority logic
-        let priority;
-        if (missingSkills.length > 3) priority = "High";
-        else if (missingSkills.length === 2) priority = "Medium";
-        else if (missingSkills.length === 1) priority = "Low";
-        else priority = "None – You’re ready!";
+    // AI-style priority logic
+    let priority;
+    if (missingSkills.length > 3) priority = "High";
+    else if (missingSkills.length === 2) priority = "Medium";
+    else if (missingSkills.length === 1) priority = "Low";
+    else priority = "None – You’re ready!";
 
-        document.getElementById("missingSkillsOutput").innerHTML = `
-            <h3>Hello, ${studentName}!</h3>
-            <p><strong>Desired Field:</strong> ${field}</p>
-            <p><strong>Missing Skills:</strong></p>
-            <ul>${missingSkills.length > 0 ? missingSkills.map(skill => `<li>${skill}</li>`).join("") : "<li>No missing skills!</li>"}</ul>
-            <p><strong>AI Priority Level:</strong> ${priority}</p>
-        `;
+    // Build learning resources HTML
+    let learningHTML = "";
+    missingSkills.forEach(skill => {
+        if (learningResources[skill]) {
+            learningHTML += `<li>${skill} → ${learningResources[skill].description} 
+            <br><a href="${learningResources[skill].link}" target="_blank">Learn ${skill}</a></li>`;
+        } else {
+            learningHTML += `<li>${skill} → No resource available yet</li>`;
+        }
+    });
 
-        document.getElementById("page2").style.display = "none";
-        document.getElementById("page3").style.display = "block";
-    }
+    // Final output
+    document.getElementById("missingSkillsOutput").innerHTML = `
+        <h3>Hello, ${studentName}!</h3>
+        <p><strong>Desired Field:</strong> ${field}</p>
+        <p><strong>Missing Skills & Learning Resources:</strong></p>
+        <ul>${missingSkills.length > 0 ? learningHTML : "<li>No missing skills!</li>"}</ul>
+        <p><strong>AI Priority Level:</strong> ${priority}</p>
+        <p><strong>Suggested Learning Path:</strong> Start with the basics, then practice projects, and finally apply skills in real-world scenarios.</p>
+    `;
 
-    function goToPage4() {
-        let recommendedCompanies = companies[field];
-        document.getElementById("companyOutput").innerHTML = `
-            <h3>Recommended Companies for ${field}:</h3>
-            <ul>${recommendedCompanies.map(c => `<li>${c}</li>`).join("")}</ul>
-        `;
-        document.getElementById("page3").style.display = "none";
-        document.getElementById("page4").style.display = "block";
-    }
-</script>
+    document.getElementById("page2").style.display = "none";
+    document.getElementById("page3").style.display = "block";
+}
 
-</body>
-</html>
+function goToPage4() {
+    let recommendedCompanies = companies[field];
+
+    // Suggested practice projects for each field
+    const projects = {
+        "Data Science": [
+            "Analyze a public dataset (Kaggle)",
+            "Build a machine learning model",
+            "Create a data visualization dashboard"
+        ],
+        "Web Development": [
+            "Build a personal portfolio website",
+            "Create a simple e-commerce site",
+            "Develop a blog with React"
+        ],
+        "Digital Marketing": [
+            "Run a mock SEO campaign",
+            "Create social media content plan",
+            "Analyze Google Analytics data"
+        ],
+        "Cyber Security": [
+            "Set up a secure Linux server",
+            "Perform a basic penetration test",
+            "Configure firewalls and security policies"
+        ]
+    };
+
+    document.getElementById("companyOutput").innerHTML = `
+        <h3>Recommended Companies for ${field}:</h3>
+        <ul>${recommendedCompanies.map(c => `<li>${c}</li>`).join("")}</ul>
+        <h3>Suggested Projects to Practice:</h3>
+        <ul>${projects[field].map(p => `<li>${p}</li>`).join("")}</ul>
+        <p><strong>Tip:</strong> Completing these projects will make you more attractive to the companies listed above.</p>
+    `;
+
+    document.getElementById("page3").style.display = "none";
+    document.getElementById("page4").style.display = "block";
+}
+
+
